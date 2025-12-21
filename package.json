@@ -1,0 +1,27 @@
+{
+  "name": "jobs-api-fullstack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZalandZamar/fullstack-jobs-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ZalandZamar/fullstack-jobs-api/issues"
+  },
+  "homepage": "https://github.com/ZalandZamar/fullstack-jobs-api#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
