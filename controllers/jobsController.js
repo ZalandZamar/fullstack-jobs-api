@@ -1,8 +1,14 @@
 const Job = require("../models/Job");
 const { StatusCodes } = require("http-status-codes");
+const { unauthenticatedError, badREquest, notFound } = require("../errors");
 
 const getAllJobs = async (req, res) => {
   const job = await Job.find({ createdBy: req.user.userId });
+
+  if (!job) {
+    throw new notFound("no jobs found");
+  }
+
   res.status(StatusCodes.OK).json({ job, jobsCount: job.length });
 };
 
@@ -13,6 +19,11 @@ const getJob = async (req, res) => {
   } = req;
 
   const job = await Job.findOne({ _id: jobId, createdBy: userId });
+
+  if (!job) {
+    throw new notFound("job not found");
+  }
+
   res.status(StatusCodes.OK).json({ job });
 };
 
@@ -30,10 +41,10 @@ const updateJob = async (req, res) => {
   } = req;
 
   if (!company || !position) {
-    throw new Error("provide company and position");
+    throw new badREquest("please provide company and position");
   }
 
-  const job = await Job.findByIdAndUpdate(
+  const job = await Job.findOneAndUpdate(
     { _id: jobId, createdBy: userId },
     req.body,
     {
@@ -43,7 +54,7 @@ const updateJob = async (req, res) => {
   );
 
   if (!job) {
-    throw new Error("something went wrong");
+    throw new notFound("no job found");
   }
 
   res.status(StatusCodes.OK).json({ job });
@@ -55,7 +66,12 @@ const removeJob = async (req, res) => {
     params: { id: jobId },
   } = req;
 
-  const job = await Job.findByIdAndDelete({ _id: jobId, createdBy: userId });
+  const job = await Job.findOneAndDelete({ _id: jobId, createdBy: userId });
+
+  if (!job) {
+    throw new notFound("no job found");
+  }
+
   res.status(StatusCodes.OK).json({ job });
 };
 

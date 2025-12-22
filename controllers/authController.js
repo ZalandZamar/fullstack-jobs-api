@@ -1,6 +1,7 @@
 const UserModel = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcryptjs");
+const { unauthenticatedError, badREquest } = require("../errors");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -14,22 +15,17 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "email and password required" });
-    return;
+    throw new badREquest("wrong credentials");
   }
 
   const user = await UserModel.findOne({ email });
 
   if (!user) {
-    res.status(StatusCodes.UNAUTHORIZED).json({ message: "user not found" });
-    return;
+    throw new unauthenticatedError("user can not be found");
   }
   const pwd = await user.comparePassword(password);
   if (!pwd) {
-    res.status(StatusCodes.UNAUTHORIZED).json({ message: "not authorized" });
-    return;
+    throw new unauthenticatedError("wrong credentials");
   }
 
   const token = user.createJWT();
