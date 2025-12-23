@@ -5,11 +5,13 @@ const connectDB = require("./DB/connectDB");
 const authRouter = require("./routes/authRoutes");
 const jobsRouter = require("./routes/jobRoutes");
 const authMiddleWare = require("./middleware/authMiddleware");
+const cors = require("cors");
 
 const notFound = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
 app.use(express.json());
+app.use(cors());
 
 // routes
 app.get("/", (req, res) => {
